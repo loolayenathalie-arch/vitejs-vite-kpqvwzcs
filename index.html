@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#1D9E75" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Ma Bibliothèque" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+  <!-- SEO -->
+  <title>Bibliothèque des Pensées — Amotessa</title>
+  <meta name="description" content="L'application bien-être du soir pour les enfants. Dépose tes pensées, dessine, et dors le cœur léger." />
+  <meta name="author" content="Amotessa SARL-S" />
+  <meta property="og:title" content="Bibliothèque des Pensées" />
+  <meta property="og:description" content="L'application bien-être du soir pour les enfants." />
+  <meta property="og:type" content="website" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body, #root {
+      height: 100%;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #E4FFF8;
+      overscroll-behavior: none;
+    }
+    /* Splash screen */
+    #splash {
+      position: fixed; inset: 0;
+      background: linear-gradient(160deg, #E4FFF8, #C8F4EC, #A8EAD8);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease;
+    }
+    #splash.fade { opacity: 0; pointer-events: none; }
+    #splash-bear {
+      font-size: 80px;
+      animation: bear-bounce 2.5s ease-in-out infinite;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 8px 20px rgba(29,158,117,0.3));
+    }
+    #splash-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 22px;
+      color: #085041;
+      margin-bottom: 8px;
+    }
+    #splash-sub {
+      font-size: 13px;
+      color: #1D9E75;
+      font-weight: 600;
+    }
+    @keyframes bear-bounce {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50%       { transform: translateY(-14px) rotate(2deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Splash -->
+  <div id="splash">
+    <div id="splash-bear">🐻</div>
+    <div id="splash-title">Bibliothèque des Pensées</div>
+    <div id="splash-sub">✨ Ton doudou se réveille…</div>
+  </div>
+
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+
+  <script>
+    window.__hideSplash = function() {
+      var s = document.getElementById('splash');
+      if (s) { s.classList.add('fade'); setTimeout(function(){ s.remove(); }, 700); }
+    };
+    setTimeout(window.__hideSplash, 4000);
+  </script>
+</body>
+</html>
