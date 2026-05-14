@@ -3409,7 +3409,8 @@ const AVATAR_NAMES = {
 };
 
 function CompanionScreen({ profile, onDone }) {
-  const [avatar, setAvatar]     = useState(profile?.avatar || "🦊");
+  const saved = loadProfile();
+  const [avatar, setAvatar]     = useState(saved?.avatar || profile?.avatar || "🦊");
   const [confirmed, setConfirmed] = useState(false);
   const { speak, stop } = useSpeech();
 
@@ -4173,7 +4174,7 @@ function ParentSpace({ thoughts, onClose, onClearNight }) {
   const [phase, setPhase]       = useState("pin");
   const [input, setInput]       = useState("");
   const [error, setError]       = useState(false);
-  try { const [pinSet]                = useState(!!localStorage.getItem(PIN_KEY)); } catch {}
+  const [pinSet, setPinSet]           = useState(() => { try { return !!localStorage.getItem(PIN_KEY); } catch { return false; } });
   const [newPin, setNewPin]     = useState(""), [confirmPin, setConfirmPin] = useState("");
   const [pinError, setPinError] = useState("");
   const [tab, setTab]           = useState("resume");
@@ -5576,7 +5577,7 @@ export default function BibliothequeDesPensees() {
                 cursor:"pointer", minHeight:44, fontFamily:FF.body }}>
               {profile.avatar} Changer mon compagnon
             </button>
-            <button onClick={() => setIsManualNight(n => !n)}
+            <button onClick={() => toggleNight()}
               style={{ background:"none", border:"none", fontSize:13,
                 color:T.neutral.brownMid, cursor:"pointer",
                 fontFamily:FF.body, minHeight:44 }}
