@@ -3540,8 +3540,9 @@ function CompanionScreen({ profile, onDone }) {
 
 function Onboarding({ onDone, childName, startStep = 0 }) {
   const isReduced = useReducedMotion();
-  const [leaving, setLeaving] = useState(false);
-  const { speak, stop }       = useSpeech();
+  const [step, setStep]        = useState(startStep);
+  const [leaving, setLeaving]  = useState(false);
+  const { speak, stop }        = useSpeech();
   const cur = ONBOARD_STEPS[step];
 
   useEffect(() => {
