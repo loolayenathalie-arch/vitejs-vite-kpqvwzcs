@@ -111,6 +111,7 @@ const SP = { S4:4, S8:8, S12:12, S16:16, S24:24, S32:32, S48:48 };
 ══════════════════════════════════════════════════════════ */
 const STORAGE_KEY  = "bibl_pensees_v1";
 const ONBOARD_KEY  = "bibl_onboarded_v1";
+const APP_VERSION  = "1.3.0";
 const PIN_KEY      = "bibl_pin_v1";
 const PROFILE_KEY  = "bibl_profile_v1";
 const AGE_KEY      = "bibl_age_mode_v1"; // "young" (4-7) | "older" (8-12)
