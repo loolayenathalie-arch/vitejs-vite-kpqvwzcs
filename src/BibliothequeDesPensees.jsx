@@ -1116,6 +1116,17 @@ function SkeletonShelf() {
   );
 }
 
+/* ── Floater — décorations animées fond bibliothèque ── */
+function Floater({ type, d }) {
+  const night = false; // utilisé en dehors du contexte — couleur neutre
+  const items = {
+    star:  <svg width="24" height="24" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9" fill={T.or.main} opacity="0.7"/></svg>,
+    cloud: <svg width="32" height="20" viewBox="0 0 32 20"><ellipse cx="16" cy="14" rx="14" ry="7" fill={T.mer.soft} opacity="0.6"/><ellipse cx="10" cy="11" rx="7" ry="6" fill={T.mer.soft} opacity="0.6"/><ellipse cx="22" cy="12" rx="6" ry="5" fill={T.mer.soft} opacity="0.6"/></svg>,
+    moon:  <svg width="22" height="22" viewBox="0 0 22 22"><path d="M11 2 A9 9 0 1 0 11 20 A6 6 0 1 1 11 2Z" fill={T.violet.glow} opacity="0.6"/></svg>,
+  };
+  return items[type] || items.star;
+}
+
 function SceneBoubou({ count }) {
   if (!count) return null;
   return (
@@ -5222,14 +5233,24 @@ export default function BibliothequeDesPensees() {
           * { box-sizing: border-box; }
         `}</style>
 
-        {FLOATERS.map((f,i) => (
-          <motion.div key={i} style={{ position:"absolute", left:f.x, top:f.top,
-            transform:`scale(${f.s})`, pointerEvents:"none", zIndex:0 }}
-            animate={{ y:[0,-14,4,-8,0], x:[0,4,-3,2,0] }}
-            transition={{ duration:4+f.d*1.2, repeat:Infinity, ease:"easeInOut", delay:f.d }}>
-            <Floater type={f.type} d={f.d} />
-          </motion.div>
-        ))}
+        {(() => {
+          const FLOATERS = [
+            { x:"5%",  top:"8%",  s:0.9, d:0,   type:"star"  },
+            { x:"80%", top:"5%",  s:0.7, d:0.5, type:"cloud" },
+            { x:"15%", top:"35%", s:0.6, d:1.2, type:"star"  },
+            { x:"70%", top:"30%", s:0.8, d:0.8, type:"moon"  },
+            { x:"90%", top:"55%", s:0.5, d:1.8, type:"star"  },
+            { x:"8%",  top:"65%", s:0.7, d:2.2, type:"cloud" },
+          ];
+          return FLOATERS.map((f,i) => (
+            <motion.div key={i} style={{ position:"absolute", left:f.x, top:f.top,
+              transform:`scale(${f.s})`, pointerEvents:"none", zIndex:0 }}
+              animate={{ y:[0,-14,4,-8,0], x:[0,4,-3,2,0] }}
+              transition={{ duration:4+f.d*1.2, repeat:Infinity, ease:"easeInOut", delay:f.d }}>
+              <Floater type={f.type} d={f.d} />
+            </motion.div>
+          ));
+        })()}
 
         <div style={{ textAlign:"center", padding:"20px 16px 4px", position:"relative", zIndex:1 }}>
           <h1 style={{
