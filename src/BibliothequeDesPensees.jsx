@@ -3,131 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 
 
 /* ══════════════════════════════════════════════════════════
-   ERROR BOUNDARY — Capture les crashes React
-   Affiche un écran doux au lieu d'un écran blanc
-══════════════════════════════════════════════════════════ */
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
-  componentDidCatch(error, info) {
-    console.error("BibliothequeDesPensees crash:", error, info);
-  }
-  render() {
-    if (!this.state.hasError) return this.props.children;
-    return (
-      <div style={{ position:"fixed", inset:0, background:T.vert.bg,
-        display:"flex", flexDirection:"column", alignItems:"center",
-        justifyContent:"center", padding:24, fontFamily:"Nunito, sans-serif",
-        textAlign:"center" }}>
-        <div style={{ fontSize:72, marginBottom:16 }}>🐻</div>
-        <h2 style={{ fontFamily:"'Fredoka One', cursive", fontSize:22,
-          color:T.vert.text, marginBottom:12 }}>
-          Oups ! Le doudou a besoin d'aide
-        </h2>
-        <p style={{ fontSize:14, color:T.vert.main, marginBottom:24, lineHeight:1.6 }}>
-          Quelque chose s'est mal passé.<br/>
-          Tes pensées sont en sécurité — recharge la page.
-        </p>
-        <button onClick={() => window.location.reload()}
-          style={{ padding:"14px 32px", borderRadius:20, border:"none",
-            background:"linear-gradient(135deg,#1D9E75,#15876A)",
-            color:"#fff", fontSize:16, fontFamily:"'Fredoka One', cursive",
-            cursor:"pointer" }}>
-          Recharger l'app 🔄
-        </button>
-        <details style={{ marginTop:16, fontSize:11, color:T.neutral.brownMid, maxWidth:340 }}>
-          <summary style={{ cursor:"pointer" }}>Détails techniques</summary>
-          <pre style={{ textAlign:"left", marginTop:8, whiteSpace:"pre-wrap",
-            wordBreak:"break-all" }}>
-            {this.state.error?.message}
-          </pre>
-        </details>
-      </div>
-    );
-  }
-}
-
-/* ══════════════════════════════════════════════════════════
-   MULTILINGUE — FR / LU / DE
-══════════════════════════════════════════════════════════ */
-const LANGS = {
-  fr: {
-    name: "Français", flag: "🇫🇷",
-    goodevening: (n) => n ? `Bonsoir ${n} ! 🌙` : "Bonsoir ! 🌙",
-    libraryTitle: "Bibliothèque des Pensées",
-    depositText: "Dépose tes pensées",
-    sleepText: "et dors le cœur léger ✨",
-    shelfLabels: {
-      boubou: "Mes douceurs à soigner",
-      cloud:  "Mes pensées du moment",
-      trash:  "Ce que je confie aux vagues",
-      lettre: "Ma petite lettre du soir",
-      bonheur:"Ce que je garde dans mon cœur",
-    },
-    write: "✏️ Écrire", speak: "🎤 Parler", draw: "🎨 Dessiner",
-    store: "Ranger",
-    parentSpace: "👨‍👩‍👧 Espace parent",
-    noThoughts: "Aucune pensée rangée ici encore…",
-    welcomeTitle: (n) => n ? `Bonsoir ${n} ! 🌙` : "Bonsoir ! 🌙",
-  },
-  lu: {
-    name: "Lëtzebuergesch", flag: "🇱🇺",
-    goodevening: (n) => n ? `Guddenowend ${n} ! 🌙` : "Guddenowend ! 🌙",
-    libraryTitle: "Gedanke-Bibliothéik",
-    depositText: "Leg deng Gedanken hei of",
-    sleepText: "a schlof roueg ✨",
-    shelfLabels: {
-      boubou: "Meng kleng Wéien",
-      cloud:  "Meng Gedanken haut",
-      trash:  "Wat ech de Welle soe",
-      lettre: "Mäi klengen Owend-Bréif",
-      bonheur:"Wat ech am Häerz droen",
-    },
-    write: "✏️ Schreiwen", speak: "🎤 Schwätzen", draw: "🎨 Moolen",
-    store: "Aräumen",
-    parentSpace: "👨‍👩‍👧 Elteren-Plaz",
-    noThoughts: "Nach keng Gedanken hei…",
-    welcomeTitle: (n) => n ? `Guddenowend ${n} ! 🌙` : "Guddenowend ! 🌙",
-  },
-  de: {
-    name: "Deutsch", flag: "🇩🇪",
-    goodevening: (n) => n ? `Guten Abend ${n} ! 🌙` : "Guten Abend ! 🌙",
-    libraryTitle: "Gedanken-Bibliothek",
-    depositText: "Leg deine Gedanken ab",
-    sleepText: "und schlaf mit leichtem Herzen ✨",
-    shelfLabels: {
-      boubou: "Meine kleinen Wehwehchen",
-      cloud:  "Meine Gedanken heute",
-      trash:  "Was ich den Wellen anvertraue",
-      lettre: "Mein kleiner Abendbrief",
-      bonheur:"Was ich in meinem Herzen trage",
-    },
-    write: "✏️ Schreiben", speak: "🎤 Sprechen", draw: "🎨 Zeichnen",
-    store: "Einräumen",
-    parentSpace: "👨‍👩‍👧 Eltern-Bereich",
-    noThoughts: "Noch keine Gedanken hier…",
-    welcomeTitle: (n) => n ? `Guten Abend ${n} ! 🌙` : "Guten Abend ! 🌙",
-  },
-};
-
-function useLang() {
-  const [lang, setLangState] = useState(() => {
-    try { return localStorage.getItem("bibl_lang") || "fr"; } catch { return "fr"; }
-  });
-  const setLang = (l) => {
-    try { localStorage.setItem("bibl_lang", l); } catch {}
-    setLangState(l);
-  };
-  return { lang, setLang, t: LANGS[lang] || LANGS.fr };
-}
-
-
-/* ══════════════════════════════════════════════════════════
    DESIGN TOKENS — SOURCE UNIQUE DE VÉRITÉ
    Toutes les couleurs de l'app passent par ici.
    Pour changer un thème : modifier uniquement cette section.
@@ -322,6 +197,132 @@ const SHELVES = [
   { id:"lettre",  emoji:"✉️", label:"Ma petite lettre du soir",      desc:"Un mot que j'aimerais partager",      placeholder:"Ce que j'aimerais dire ce soir…",    bg:T.nuit.bg,   border:T.nuit.light,   dot:T.nuit.main,   text:T.nuit.text,   postit:T.nuit.soft   },
   { id:"bonheur", emoji:"⭐", label:"Ce que je garde dans mon cœur", desc:"Ce qui m'accompagne vers les rêves",  placeholder:"Ma douceur du soir…",                bg:T.or.bg,     border:T.or.light,     dot:T.or.main,     text:T.or.text,     postit:T.or.soft     },
 ];
+
+/* ══════════════════════════════════════════════════════════
+   ERROR BOUNDARY — Capture les crashes React
+   Affiche un écran doux au lieu d'un écran blanc
+══════════════════════════════════════════════════════════ */
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, info) {
+    console.error("BibliothequeDesPensees crash:", error, info);
+  }
+  render() {
+    if (!this.state.hasError) return this.props.children;
+    return (
+      <div style={{ position:"fixed", inset:0, background:T.vert.bg,
+        display:"flex", flexDirection:"column", alignItems:"center",
+        justifyContent:"center", padding:24, fontFamily:"Nunito, sans-serif",
+        textAlign:"center" }}>
+        <div style={{ fontSize:72, marginBottom:16 }}>🐻</div>
+        <h2 style={{ fontFamily:"'Fredoka One', cursive", fontSize:22,
+          color:T.vert.text, marginBottom:12 }}>
+          Oups ! Le doudou a besoin d'aide
+        </h2>
+        <p style={{ fontSize:14, color:T.vert.main, marginBottom:24, lineHeight:1.6 }}>
+          Quelque chose s'est mal passé.<br/>
+          Tes pensées sont en sécurité — recharge la page.
+        </p>
+        <button onClick={() => window.location.reload()}
+          style={{ padding:"14px 32px", borderRadius:20, border:"none",
+            background:"linear-gradient(135deg,#1D9E75,#15876A)",
+            color:"#fff", fontSize:16, fontFamily:"'Fredoka One', cursive",
+            cursor:"pointer" }}>
+          Recharger l'app 🔄
+        </button>
+        <details style={{ marginTop:16, fontSize:11, color:T.neutral.brownMid, maxWidth:340 }}>
+          <summary style={{ cursor:"pointer" }}>Détails techniques</summary>
+          <pre style={{ textAlign:"left", marginTop:8, whiteSpace:"pre-wrap",
+            wordBreak:"break-all" }}>
+            {this.state.error?.message}
+          </pre>
+        </details>
+      </div>
+    );
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   MULTILINGUE — FR / LU / DE
+══════════════════════════════════════════════════════════ */
+const LANGS = {
+  fr: {
+    name: "Français", flag: "🇫🇷",
+    goodevening: (n) => n ? `Bonsoir ${n} ! 🌙` : "Bonsoir ! 🌙",
+    libraryTitle: "Bibliothèque des Pensées",
+    depositText: "Dépose tes pensées",
+    sleepText: "et dors le cœur léger ✨",
+    shelfLabels: {
+      boubou: "Mes douceurs à soigner",
+      cloud:  "Mes pensées du moment",
+      trash:  "Ce que je confie aux vagues",
+      lettre: "Ma petite lettre du soir",
+      bonheur:"Ce que je garde dans mon cœur",
+    },
+    write: "✏️ Écrire", speak: "🎤 Parler", draw: "🎨 Dessiner",
+    store: "Ranger",
+    parentSpace: "👨‍👩‍👧 Espace parent",
+    noThoughts: "Aucune pensée rangée ici encore…",
+    welcomeTitle: (n) => n ? `Bonsoir ${n} ! 🌙` : "Bonsoir ! 🌙",
+  },
+  lu: {
+    name: "Lëtzebuergesch", flag: "🇱🇺",
+    goodevening: (n) => n ? `Guddenowend ${n} ! 🌙` : "Guddenowend ! 🌙",
+    libraryTitle: "Gedanke-Bibliothéik",
+    depositText: "Leg deng Gedanken hei of",
+    sleepText: "a schlof roueg ✨",
+    shelfLabels: {
+      boubou: "Meng kleng Wéien",
+      cloud:  "Meng Gedanken haut",
+      trash:  "Wat ech de Welle soe",
+      lettre: "Mäi klengen Owend-Bréif",
+      bonheur:"Wat ech am Häerz droen",
+    },
+    write: "✏️ Schreiwen", speak: "🎤 Schwätzen", draw: "🎨 Moolen",
+    store: "Aräumen",
+    parentSpace: "👨‍👩‍👧 Elteren-Plaz",
+    noThoughts: "Nach keng Gedanken hei…",
+    welcomeTitle: (n) => n ? `Guddenowend ${n} ! 🌙` : "Guddenowend ! 🌙",
+  },
+  de: {
+    name: "Deutsch", flag: "🇩🇪",
+    goodevening: (n) => n ? `Guten Abend ${n} ! 🌙` : "Guten Abend ! 🌙",
+    libraryTitle: "Gedanken-Bibliothek",
+    depositText: "Leg deine Gedanken ab",
+    sleepText: "und schlaf mit leichtem Herzen ✨",
+    shelfLabels: {
+      boubou: "Meine kleinen Wehwehchen",
+      cloud:  "Meine Gedanken heute",
+      trash:  "Was ich den Wellen anvertraue",
+      lettre: "Mein kleiner Abendbrief",
+      bonheur:"Was ich in meinem Herzen trage",
+    },
+    write: "✏️ Schreiben", speak: "🎤 Sprechen", draw: "🎨 Zeichnen",
+    store: "Einräumen",
+    parentSpace: "👨‍👩‍👧 Eltern-Bereich",
+    noThoughts: "Noch keine Gedanken hier…",
+    welcomeTitle: (n) => n ? `Guten Abend ${n} ! 🌙` : "Guten Abend ! 🌙",
+  },
+};
+
+function useLang() {
+  const [lang, setLangState] = useState(() => {
+    try { return localStorage.getItem("bibl_lang") || "fr"; } catch { return "fr"; }
+  });
+  const setLang = (l) => {
+    try { localStorage.setItem("bibl_lang", l); } catch {}
+    setLangState(l);
+  };
+  return { lang, setLang, t: LANGS[lang] || LANGS.fr };
+}
+
+
 
 const ONBOARD_STEPS = [
   { shelf:null,     emoji:"🐻", title:"Bonsoir, je suis ton doudou gardien",
@@ -2819,6 +2820,33 @@ function migrateData() {
 migrateData();
 
 
+/* ── Notifications push soirée ── */
+async function requestNotifPermission() {
+  if (!("Notification" in window)) return false;
+  if (Notification.permission === "granted") return true;
+  const p = await Notification.requestPermission();
+  return p === "granted";
+}
+
+function scheduleEveningNotif(childName) {
+  if (!("Notification" in window) || Notification.permission !== "granted") return;
+  const now   = new Date();
+  const notif = new Date();
+  notif.setHours(20, 0, 0, 0);
+  if (notif <= now) notif.setDate(notif.getDate() + 1);
+  const delay = notif.getTime() - now.getTime();
+  setTimeout(() => {
+    try {
+      new Notification("📚 Bibliothèque des Pensées", {
+        body: childName ? `Bonsoir ${childName} ! Ton doudou t'attend. 🐻` : "Bonsoir ! Ton doudou t'attend. 🐻",
+        icon: "/icons/icon-192.png",
+        tag:  "evening-reminder",
+      });
+    } catch {}
+    scheduleEveningNotif(childName);
+  }, Math.min(delay, 2147483647));
+}
+
 /* ── Analytics anonymes (pas de tracking personnel) ── */
 
 
@@ -2981,7 +3009,7 @@ const useApp = () => useContext(AppContext);
 
 /* ── Migration données localStorage ── */
 // Exécuter la migration au démarrage
-migrateDataIfNeeded();
+migrateData();
 
 /* ── Analytics anonymes (local, sans RGPD) ── */
 
