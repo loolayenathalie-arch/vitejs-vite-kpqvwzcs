@@ -72,7 +72,7 @@ const LANGS = {
     write: "✏️ Écrire", speak: "🎤 Parler", draw: "🎨 Dessiner",
     store: "Ranger",
     parentSpace: "👨‍👩‍👧 Espace parent",
-    noThoughts: t?.noThoughts || "Aucune pensée rangée ici encore…",
+    noThoughts: "Aucune pensée rangée ici encore…",
     welcomeTitle: (n) => n ? `Bonsoir ${n} ! 🌙` : "Bonsoir ! 🌙",
   },
   lu: {
