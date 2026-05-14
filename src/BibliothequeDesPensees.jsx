@@ -3851,11 +3851,11 @@ function SettingsTab({ onClearNight }) {
       <div style={{ background:"#fff", borderRadius:16, padding:"16px", border:"1px solid #E2D9CF" }}>
         <div style={{ fontSize:13, fontWeight:600, color:T.neutral.brown, marginBottom:12 }}>🌍 Langue / Sprooch / Sprache</div>
         <div style={{ display:"flex", gap:8 }}>
-          {Object.entries(LANGS).map(([code, l]) => {
-            try { const active = (localStorage.getItem("bibl_lang")||"fr") === code; } catch {}
+          {Object.entries(LANGS).map(([langCode, l]) => {
+            const active = (() => { try { return (localStorage.getItem("bibl_lang")||"fr") === langCode; } catch { return langCode === "fr"; } })();
             return (
-              <button key={code}
-                onClick={() => { try { localStorage.setItem("bibl_lang", code); } catch {} window.location.reload(); }}
+              <button key={langCode}
+                onClick={() => { try { localStorage.setItem("bibl_lang", langCode); } catch {} window.location.reload(); }}
                 style={{ flex:1, padding:"10px 8px", borderRadius:16, border:`2px solid ${active?T.violet.main:T.ui.border}`,
                   background: active ? T.violet.bg : T.neutral.cream,
                   color: active ? T.violet.text : T.neutral.brown,
@@ -5594,7 +5594,8 @@ export default function BibliothequeDesPensees() {
                   try { localStorage.clear(); } catch(e) { console.warn("localStorage.clear:", e); }
                   setProfile({ name:"", avatar:"🦊" });
                   setThoughts(EMPTY);
-                  setShowProfileSetup(true);
+                  setShowConsent(true);
+                  setShowProfileSetup(false);
                   setShowWelcome(false);
                   setShowPresentation(false);
                   setShowCompanion(false);
